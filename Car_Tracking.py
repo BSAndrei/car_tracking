@@ -1,37 +1,37 @@
-# Import opencv library
+#Import opencv
 import cv2
 
-# Define the path to the cascade classifier for car detection
+#Define the path to the cascade classifier for car detection
 cascade_src = 'cars.xml'
 
-# Specify the path to the video file to be processed
+#specify the path to the video file to be processed
 video = r'D:\Projects\vehicle_camera_ai\video1.mp4'
 
-# Constants for measurement reference
+#Constants for measurement reference
 KNOWN_WIDTH = 1.8  # Known width of an object (e.g., a car) in meters
 FOCAL_LENGTH = 800  # Example focal length in pixels
 
-# Function to calculate the distance to an object
+#function to calculate the distance to an object
 def calculate_distance(known_width, focal_length, object_width_in_pixels):
     return (known_width * focal_length) / object_width_in_pixels
 
-# Function to detect cars in a video and estimate their distances
+#Function to detect cars in a video and estimate their distances
 def detectCars(filename):
     rectangles = []
     
-    # Load the cascade classifier for car detection
+    #Load cascade classifier for car detection
     cascade = cv2.CascadeClassifier(cascade_src)
 
-    # Open the video capture
+    #open the video
     vc = cv2.VideoCapture(filename)
 
-    # Check if the video capture is opened successfully
+    #Check if the video capture is opened successfully
     if vc.isOpened():
         rval, frame = vc.read()
     else:
         rval = False
 
-    # Start processing each frame of the video
+    #Start processing each frame of the video
     while rval:
         rval, frame = vc.read()
         frameHeight, frameWidth, fdepth = frame.shape
@@ -46,7 +46,7 @@ def detectCars(filename):
         cars = cascade.detectMultiScale(gray, 1.3, 3)
 
         for (x, y, w, h) in cars:
-            # Draw rectangles around the detected cars
+            #Drawing rectangles around the detected cars
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
             # Calculate the estimate distance to each car
@@ -57,10 +57,10 @@ def detectCars(filename):
             # Display the estimated distance
             cv2.putText(frame, distance_str, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-        # Show the result frame with rectangles and distance information
+        #show the result frame with rectangles and distance information
         cv2.imshow("Result", frame)
 
-        # Check if the 'q' key is pressed to exit the loop
+        #Check if the 'q' key is pressed to exit the loop
         if cv2.waitKey(33) == ord('q'):
             break
 
